@@ -25,7 +25,7 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
         loadRecords()
-        firstHardcodedRecord()
+        firstHardcodedRecordAdds()
     }
     
     override func viewWillLayoutSubviews() {
@@ -35,10 +35,10 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
         loadRecords()
     }
     
-    private func firstHardcodedRecord() {
+    private func firstHardcodedRecordAdds() {
         if taskArray.isEmpty == true {
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске!"
+            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Но меня можно удалить!"
             saveRecord()
         } else {
             print("Hardcoded record already exists")
@@ -97,7 +97,7 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        router?.presentRecordEditVC()
+        router?.presentRecordEditVC(with: taskArray[indexPath.row])
     }
 }
 // Extension for save/load/delete

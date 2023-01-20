@@ -12,14 +12,21 @@ class RecordEditViewController: UIViewController, Routable {
     @IBOutlet var recordTextField: UITextField!
     
     var router: MainRouter?
-    
+    var recordText: Record!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(save))
+        recordTextField.text = recordText.name
     }
     
-    @objc func save() {
+    private func setupView() {
+        recordTextField.borderStyle = .none
+        //recordTextField.number
+    }
+    
+    @objc private func save() {
         print("Saved")
     }
 }

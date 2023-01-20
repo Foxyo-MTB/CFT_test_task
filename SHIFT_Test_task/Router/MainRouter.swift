@@ -26,9 +26,10 @@ class MainRouter: NSObject {
         pushViewController(vc: vc, animated: true)
     }
     
-    func presentRecordEditVC() {
+    func presentRecordEditVC(with record: Record) {
         let storyboard = UIStoryboard.init(name: "RecordEdit", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "RecordEdit") as! RecordEditViewController
+        vc.recordText = record
         pushViewController(vc: vc, animated: true)
     }
     
