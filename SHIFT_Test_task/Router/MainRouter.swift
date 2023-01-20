@@ -18,7 +18,6 @@ class MainRouter: NSObject {
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
-        navigationController.setNavigationBarHidden(true, animated: true)
         self.navigationController = navigationController
     }
     
