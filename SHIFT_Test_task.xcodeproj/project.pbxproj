@@ -13,7 +13,7 @@
 		74793A68297AD8AC00FF19B6 /* SHIFT_Test_task.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 74793A66297AD8AC00FF19B6 /* SHIFT_Test_task.xcdatamodeld */; };
 		74793A6A297AD8AC00FF19B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74793A69297AD8AC00FF19B6 /* Assets.xcassets */; };
 		74793A6D297AD8AC00FF19B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74793A6B297AD8AC00FF19B6 /* LaunchScreen.storyboard */; };
-		74793A7B297ADA2900FF19B6 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A7A297ADA2900FF19B6 /* Router.swift */; };
+		74793A7B297ADA2900FF19B6 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A7A297ADA2900FF19B6 /* MainRouter.swift */; };
 		74793A7D297ADA8D00FF19B6 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A7C297ADA8D00FF19B6 /* MainView.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +26,7 @@
 		74793A69297AD8AC00FF19B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74793A6C297AD8AC00FF19B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74793A6E297AD8AC00FF19B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		74793A7A297ADA2900FF19B6 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		74793A7A297ADA2900FF19B6 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
 		74793A7C297ADA8D00FF19B6 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,7 +108,7 @@
 		74793A79297AD98C00FF19B6 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				74793A7A297ADA2900FF19B6 /* Router.swift */,
+				74793A7A297ADA2900FF19B6 /* MainRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -186,7 +186,7 @@
 				74793A62297AD8AC00FF19B6 /* MainViewController.swift in Sources */,
 				74793A7D297ADA8D00FF19B6 /* MainView.swift in Sources */,
 				74793A5E297AD8AC00FF19B6 /* AppDelegate.swift in Sources */,
-				74793A7B297ADA2900FF19B6 /* Router.swift in Sources */,
+				74793A7B297ADA2900FF19B6 /* MainRouter.swift in Sources */,
 				74793A60297AD8AC00FF19B6 /* SceneDelegate.swift in Sources */,
 				74793A68297AD8AC00FF19B6 /* SHIFT_Test_task.xcdatamodeld in Sources */,
 			);
