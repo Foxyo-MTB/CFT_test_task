@@ -21,9 +21,9 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Добавьте заметку", style: .plain, target: self, action: #selector(addTapped))
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Добавьте заметку", style: .plain, target: self, action: #selector(addTapped))
         loadRecords()
         firstHardcodedRecord()
     }
@@ -38,7 +38,7 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
     private func firstHardcodedRecord() {
         if taskArray.isEmpty == true {
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске"
+            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске!"
             saveRecord()
         } else {
             print("Hardcoded record already exists")
@@ -95,6 +95,10 @@ extension MainViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        router?.presentRecordEditVC()
+    }
 }
 // Extension for save/load/delete
 extension MainViewController: UITableViewDelegate {
@@ -119,7 +123,7 @@ extension MainViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        print("lalal")
+
         let contextItem = UIContextualAction(style: .destructive, title: "Удалить") {  (contextualAction, view, boolValue) in
             self.context.delete(self.taskArray[indexPath.row])                                                // Delete from Core Data.
             self.taskArray.remove(at: indexPath.row)                                                          // Delete from Array.

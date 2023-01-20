@@ -26,6 +26,12 @@ class MainRouter: NSObject {
         pushViewController(vc: vc, animated: true)
     }
     
+    func presentRecordEditVC() {
+        let storyboard = UIStoryboard.init(name: "RecordEdit", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "RecordEdit") as! RecordEditViewController
+        pushViewController(vc: vc, animated: true)
+    }
+    
     func back() {
         navigationController.popViewController(animated: true)
     }
