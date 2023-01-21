@@ -26,6 +26,15 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
         baseView.mainTableViewProvidesToVC().delegate = self
         loadRecords()
         firstHardcodedRecordAdds()
+        
+        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
+        if launchedBefore  {
+            print("Not first launch.")
+        } else {
+            print("First launch, setting UserDefault.")
+            UserDefaults.standard.set(true, forKey: "launchedBefore")
+        }
+        
     }
     
     override func viewWillLayoutSubviews() {
@@ -38,7 +47,7 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
     private func firstHardcodedRecordAdds() {
         if taskArray.isEmpty == true {
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Но меня можно удалить!"
+            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске!"
             saveRecord()
         } else {
             print("Hardcoded record already exists")
@@ -88,14 +97,15 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = baseView.mainTableViewProvidesToVC().dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = baseView.mainTableViewProvidesToVC().dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
         let record = taskArray[indexPath.row]
-        cell.textLabel?.text = record.name
-        cell.textLabel?.numberOfLines = 0
+        cell.mainTableViewLabelProvidesToVC().text = record.name
         cell.selectionStyle = .none
+        cell.separatorInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
         return cell
     }
     
+   
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         router?.presentRecordEditVC(with: taskArray[indexPath.row])
     }
@@ -113,9 +123,10 @@ extension MainViewController: UITableViewDelegate {
         baseView.mainTableViewProvidesToVC().reloadData()
     }
     
-    private func loadRecords(with request: NSFetchRequest<Record> = Record.fetchRequest()) {            // With - external parameter, request - internal parameter. = Record.fetchRequest() is a default value here.
+    private func loadRecords(with request: NSFetchRequest<Record> = Record.fetchRequest()) {
+        
         do {
-            taskArray = try context.fetch(request)                  // Do-catch block for .fetch because this method throws an error.
+            taskArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context, \(error)")
         }
@@ -125,10 +136,10 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         let contextItem = UIContextualAction(style: .destructive, title: "Удалить") {  (contextualAction, view, boolValue) in
-            self.context.delete(self.taskArray[indexPath.row])                                                // Delete from Core Data.
-            self.taskArray.remove(at: indexPath.row)                                                          // Delete from Array.
+            self.context.delete(self.taskArray[indexPath.row])
+            self.taskArray.remove(at: indexPath.row)
             do {
-                try self.context.save()                                                                             //Renew of our Core Data.
+                try self.context.save()
                 self.baseView.mainTableViewProvidesToVC().reloadData()
             } catch {
                 print(error)

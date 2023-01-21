@@ -16,22 +16,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Текст заметки" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6tA-S9-9Of" userLabel="recordTextField">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="25.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="CIt-Xc-Z2D" userLabel="recordTextView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6tA-S9-9Of" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="4qJ-aE-V4O"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="6tA-S9-9Of" secondAttribute="trailing" id="N3E-Xt-1KB"/>
-                            <constraint firstItem="6tA-S9-9Of" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="XZA-7g-LRz"/>
+                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="EVX-p3-zgX"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="CIt-Xc-Z2D" secondAttribute="trailing" id="Huj-VK-IAp"/>
+                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="IAN-lK-5PK"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="CIt-Xc-Z2D" secondAttribute="bottom" id="Ua6-FC-cJM"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="recordTextField" destination="6tA-S9-9Of" id="VKj-c5-JfO"/>
+                        <outlet property="recordTextView" destination="CIt-Xc-Z2D" id="hcV-Zb-WN0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -40,6 +44,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

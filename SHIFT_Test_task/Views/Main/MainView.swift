@@ -12,10 +12,12 @@ class MainView: UIView {
     
     private let mainTableView: UITableView = {
         let tableView = UITableView()
-        tableView.rowHeight = 120
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.identifier)
         return tableView
     }()
     
+    
+        
     override func layoutSubviews() {
         self.backgroundColor = .white
     }
@@ -27,7 +29,6 @@ class MainView: UIView {
     init() {
         super.init(frame: .zero)
         setupView()
-        mainTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     }
     
     required init?(coder: NSCoder) {

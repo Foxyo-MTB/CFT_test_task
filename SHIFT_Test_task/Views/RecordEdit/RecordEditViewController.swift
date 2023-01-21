@@ -9,8 +9,9 @@ import UIKit
 
 class RecordEditViewController: UIViewController, Routable {
     
-    @IBOutlet var recordTextField: UITextField!
+    @IBOutlet var recordTextView: UITextView!
     
+
     var router: MainRouter?
     var recordText: Record!
 
@@ -18,12 +19,10 @@ class RecordEditViewController: UIViewController, Routable {
         super.viewDidLoad()
         setupView()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(save))
-        recordTextField.text = recordText.name
+        recordTextView.text = recordText.name
     }
     
     private func setupView() {
-        recordTextField.borderStyle = .none
-        //recordTextField.number
     }
     
     @objc private func save() {

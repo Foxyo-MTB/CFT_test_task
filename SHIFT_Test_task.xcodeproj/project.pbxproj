@@ -10,6 +10,7 @@
 		744A410A297ADFC3008BE2AB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 744A4109297ADFC3008BE2AB /* SnapKit */; };
 		744A410D297B04EA008BE2AB /* RecordEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744A410C297B04EA008BE2AB /* RecordEditViewController.swift */; };
 		744A410F297B058F008BE2AB /* RecordEdit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 744A410E297B058F008BE2AB /* RecordEdit.storyboard */; };
+		7472F65E297C11A90083347C /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7472F65D297C11A90083347C /* CustomTableViewCell.swift */; };
 		74793A5E297AD8AC00FF19B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A5D297AD8AC00FF19B6 /* AppDelegate.swift */; };
 		74793A60297AD8AC00FF19B6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A5F297AD8AC00FF19B6 /* SceneDelegate.swift */; };
 		74793A62297AD8AC00FF19B6 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74793A61297AD8AC00FF19B6 /* MainViewController.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		744A410C297B04EA008BE2AB /* RecordEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordEditViewController.swift; sourceTree = "<group>"; };
 		744A410E297B058F008BE2AB /* RecordEdit.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RecordEdit.storyboard; sourceTree = "<group>"; };
+		7472F65D297C11A90083347C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		74793A5A297AD8AC00FF19B6 /* SHIFT_Test_task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHIFT_Test_task.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74793A5D297AD8AC00FF19B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		74793A5F297AD8AC00FF19B6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -56,6 +58,14 @@
 			path = RecordEdit;
 			sourceTree = "<group>";
 		};
+		7472F65C297C11880083347C /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				7472F65D297C11A90083347C /* CustomTableViewCell.swift */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
 		74793A51297AD8AC00FF19B6 = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +85,7 @@
 		74793A5C297AD8AC00FF19B6 /* SHIFT_Test_task */ = {
 			isa = PBXGroup;
 			children = (
+				7472F65C297C11880083347C /* Custom */,
 				74793A79297AD98C00FF19B6 /* Router */,
 				74793A78297AD98400FF19B6 /* Views */,
 				74793A75297AD8CA00FF19B6 /* Model */,
@@ -208,6 +219,7 @@
 			files = (
 				74793A62297AD8AC00FF19B6 /* MainViewController.swift in Sources */,
 				744A410D297B04EA008BE2AB /* RecordEditViewController.swift in Sources */,
+				7472F65E297C11A90083347C /* CustomTableViewCell.swift in Sources */,
 				74793A7D297ADA8D00FF19B6 /* MainView.swift in Sources */,
 				74793A5E297AD8AC00FF19B6 /* AppDelegate.swift in Sources */,
 				74793A7B297ADA2900FF19B6 /* MainRouter.swift in Sources */,
