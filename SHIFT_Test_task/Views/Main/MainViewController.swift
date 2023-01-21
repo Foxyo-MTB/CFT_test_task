@@ -8,16 +8,15 @@
 import UIKit
 import CoreData
 
-class MainViewController: UIViewController, Routable, UITextFieldDelegate {
+class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     
     
     var router: MainRouter?
-    let baseView = MainView()
+    private let baseView = MainView()
     var taskArray = [Record]()
+    static let shared = MainViewController()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,29 +24,33 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
         loadRecords()
-        firstHardcodedRecordAdds()
-        
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if launchedBefore  {
             print("Not first launch.")
         } else {
+            firstHardcodedRecordAdds()
             print("First launch, setting UserDefault.")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
         }
-        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         baseView.frame = view.bounds
         view.addSubview(baseView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadRecords()
     }
     
     private func firstHardcodedRecordAdds() {
         if taskArray.isEmpty == true {
+            let hardcodedId: UUID = UUID()
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске!"
+            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! напишу позже тут как работает приложение!"
+            hardCodedRecord.id = hardcodedId
             saveRecord()
         } else {
             print("Hardcoded record already exists")
@@ -55,38 +58,30 @@ class MainViewController: UIViewController, Routable, UITextFieldDelegate {
     }
     
     @objc func addTapped() {
-        
-        var textField = UITextField()
-        let alert = UIAlertController(title: "Добавить новую заметку", message: "", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Добавить заметку", style: .default) { (action) in
-            let newRecord = Record(context: self.context)
-            newRecord.name = textField.text
-            self.taskArray.append(newRecord)
-            self.saveRecord()
-        }
-        action.isEnabled = false
-        alert.addTextField { (alertTextField) in
-            NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: alertTextField, queue: OperationQueue.main, using:
-                                                    {_ in
-                alertTextField.delegate = self
-                let textCount = alertTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
-                let textIsNotEmpty = textCount > 0
-                // If the text contains non whitespace characters, enable the OK Button
-                action.isEnabled = textIsNotEmpty
-                
-            })
-            alertTextField.placeholder = "Создайте новую заметку"
-            textField = alertTextField
-            textField.autocapitalizationType = .sentences
-        }
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-        
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-        alert.addAction(cancelAction)
-        
+        router?.presentRecordEditVCForNewRecord(isFieldEditing: false)
     }
     
+    func saveRecordAfterCreation(with record: String, id: UUID) {
+        
+        if let index = taskArray.firstIndex(where: { $0.id == id}) {
+            taskArray[index].name = record
+            saveRecord()
+            baseView.mainTableViewProvidesToVC().reloadData()
+            print("record edited")
+        } else {
+            if record != "" {
+                print("new record added")
+                let newRecord = Record(context: self.context)
+                newRecord.name = record
+                newRecord.id = id
+                self.taskArray.append(newRecord)
+                self.saveRecord()
+                baseView.mainTableViewProvidesToVC().reloadData()
+            } else {
+                print("You didn't typed text.")
+            }
+        }
+    }
 }
 
 extension MainViewController: UITableViewDataSource {
@@ -101,13 +96,13 @@ extension MainViewController: UITableViewDataSource {
         let record = taskArray[indexPath.row]
         cell.mainTableViewLabelProvidesToVC().text = record.name
         cell.selectionStyle = .none
-        cell.separatorInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+        cell.separatorInset = UIEdgeInsets()
         return cell
     }
     
-   
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        router?.presentRecordEditVC(with: taskArray[indexPath.row])
+        router?.presentRecordEditVC(with: taskArray[indexPath.row], isFieldEditing: true)
     }
 }
 // Extension for save/load/delete
@@ -134,7 +129,7 @@ extension MainViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
+        
         let contextItem = UIContextualAction(style: .destructive, title: "Удалить") {  (contextualAction, view, boolValue) in
             self.context.delete(self.taskArray[indexPath.row])
             self.taskArray.remove(at: indexPath.row)

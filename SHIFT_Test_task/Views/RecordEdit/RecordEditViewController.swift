@@ -14,18 +14,42 @@ class RecordEditViewController: UIViewController, Routable {
 
     var router: MainRouter?
     var recordText: Record!
-
+    var id: UUID = UUID()
+    var isFieldEditing: Bool?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        rightSwipeFunctionality()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(save))
-        recordTextView.text = recordText.name
-    }
-    
-    private func setupView() {
+        if recordText != nil {
+            recordTextView.text = recordText.name
+        } else {
+            navigationItem.title = "Напишите заметку"
+        }
     }
     
     @objc private func save() {
-        print("Saved")
+        if isEditing == false {
+            MainViewController.shared.saveRecordAfterCreation(with: recordTextView.text, id: id)
+            router?.back()
+        } else {
+            MainViewController.shared.saveRecordAfterCreation(with: recordTextView.text, id: recordText.id!)
+        }
     }
+}
+
+extension RecordEditViewController {
+    
+    private func rightSwipeFunctionality() {
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+        rightSwipe.direction = .right
+        view.addGestureRecognizer(rightSwipe)
+    }
+    
+    @objc func handleSwipes(_ sender:UISwipeGestureRecognizer) {
+        if (sender.direction == .right) {
+            router?.back()
+        }
+    }
+    
 }

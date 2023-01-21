@@ -20,7 +20,7 @@ class CustomTableViewCell: UITableViewCell {
     
     private func configure() {
         
-        addSubview(mainTableViewLabel)
+        contentView.addSubview(mainTableViewLabel)
         mainTableViewLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(5)
