@@ -6,35 +6,31 @@
 //
 
 import UIKit
+import CoreData
 
 class RecordEditViewController: UIViewController, Routable {
     
     @IBOutlet var recordTextView: UITextView!
     
-
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var router: MainRouter?
-    var recordText: Record!
-    var id: UUID = UUID()
-    var isFieldEditing: Bool?
+    var task: Record?
+    var selectedRecord: Record? = nil
+    var delegate: TransferDataToDetailVCProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         rightSwipeFunctionality()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(save))
-        if recordText != nil {
-            recordTextView.text = recordText.name
-        } else {
-            navigationItem.title = "Напишите заметку"
-        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
+                if task != nil {
+                    recordTextView.text = task?.name
+                } else {
+                    navigationItem.title = "Напишите заметку"
+                }
     }
     
-    @objc private func save() {
-        if isEditing == false {
-            MainViewController.shared.saveRecordAfterCreation(with: recordTextView.text, id: id)
-            router?.back()
-        } else {
-            MainViewController.shared.saveRecordAfterCreation(with: recordTextView.text, id: recordText.id!)
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
 }
 
@@ -52,4 +48,53 @@ extension RecordEditViewController {
         }
     }
     
+}
+
+extension RecordEditViewController {
+    
+    @objc private func saveButtonPressed() {
+        
+        if (task == nil)
+        {
+            print("add works")
+            let newRecord = Record(context: self.context)
+            newRecord.id = Int32(delegate.getArray.count)
+            newRecord.name = recordTextView.text
+            delegate.getArray.append(newRecord)
+            saveDetailContext()
+            do
+            {
+                try context.save()
+                delegate.getArray.append(newRecord)
+                router?.back()
+            }
+            catch
+            {
+                print("context save error")
+            }
+        }
+        else {
+        //edit record
+            print("edit works")
+            for element in delegate.getArray {
+                if (element.id == task!.id) {
+                    element.name = recordTextView.text
+                    saveDetailContext()
+                }
+            }
+            router?.back()
+        }
+    }
+}
+// Extension for save data to Core data
+extension RecordEditViewController {
+ 
+    private func saveDetailContext() {
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context, \(error)")
+        }
+    }
 }

@@ -26,18 +26,18 @@ class MainRouter: NSObject {
         pushViewController(vc: vc, animated: true)
     }
     
-    func presentRecordEditVC(with record: Record, isFieldEditing: Bool) {
+    func presentRecordEditVC(with record: Record, delegate: TransferDataToDetailVCProtocol) {
         let storyboard = UIStoryboard.init(name: "RecordEdit", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "RecordEdit") as! RecordEditViewController
-        vc.recordText = record
-        vc.isFieldEditing = isFieldEditing
+        vc.task = record
+        vc.delegate = delegate
         pushViewController(vc: vc, animated: true)
     }
     
-    func presentRecordEditVCForNewRecord(isFieldEditing: Bool) {
+    func presentRecordEditVCForNewRecord(delegate: TransferDataToDetailVCProtocol) {
         let storyboard = UIStoryboard.init(name: "RecordEdit", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "RecordEdit") as! RecordEditViewController
-        vc.isFieldEditing = false
+        vc.delegate = delegate
         pushViewController(vc: vc, animated: true)
     }
     

@@ -14,7 +14,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     var router: MainRouter?
     private let baseView = MainView()
     var taskArray = [Record]()
-    static let shared = MainViewController()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -23,15 +22,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Добавьте заметку", style: .plain, target: self, action: #selector(addTapped))
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
-        loadRecords()
-        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
-        if launchedBefore  {
-            print("Not first launch.")
-        } else {
-            firstHardcodedRecordAdds()
-            print("First launch, setting UserDefault.")
-            UserDefaults.standard.set(true, forKey: "launchedBefore")
-        }
+        firstHardcodedRecordAdds()
     }
     
     override func viewWillLayoutSubviews() {
@@ -42,46 +33,54 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadRecords()
+        loadContext()
+        //firstHardcodedRecordAdds()
     }
     
     private func firstHardcodedRecordAdds() {
-        if taskArray.isEmpty == true {
-            let hardcodedId: UUID = UUID()
+        
+        let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
+        if launchedBefore  {
+            print("Not first launch.")
+        } else {
+
             let hardCodedRecord = Record(context: self.context)
             hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! напишу позже тут как работает приложение!"
-            hardCodedRecord.id = hardcodedId
-            saveRecord()
-        } else {
-            print("Hardcoded record already exists")
+            hardCodedRecord.id = 0
+            taskArray.append(hardCodedRecord)
+            saveContext()
+            taskArray.append(hardCodedRecord)
+            saveContext()
+        
+            print("First launch, setting UserDefault.")
+            UserDefaults.standard.set(true, forKey: "launchedBefore")
         }
     }
     
     @objc func addTapped() {
-        router?.presentRecordEditVCForNewRecord(isFieldEditing: false)
+        //print(taskArray.count)
+        router?.presentRecordEditVCForNewRecord(delegate: self)
     }
     
-    func saveRecordAfterCreation(with record: String, id: UUID) {
-        
-        if let index = taskArray.firstIndex(where: { $0.id == id}) {
-            taskArray[index].name = record
-            saveRecord()
-            baseView.mainTableViewProvidesToVC().reloadData()
-            print("record edited")
-        } else {
-            if record != "" {
-                print("new record added")
-                let newRecord = Record(context: self.context)
-                newRecord.name = record
-                newRecord.id = id
-                self.taskArray.append(newRecord)
-                self.saveRecord()
-                baseView.mainTableViewProvidesToVC().reloadData()
-            } else {
-                print("You didn't typed text.")
-            }
-        }
-    }
+//    func saveRecordAfterCreation(with record: String, id: Int32) {
+//
+//        if let index = taskArray.firstIndex(where: { $0.id == id}) {
+//            taskArray[index].name = record
+//            saveContext()
+//            print("record edited")
+//        } else {
+//            if record != "" {
+//                print("new record added")
+//                let newRecord = Record(context: self.context)
+//                newRecord.name = record
+//                newRecord.id = id
+//                self.taskArray.append(newRecord)
+//                self.saveContext()
+//            } else {
+//                print("You didn't typed text.")
+//            }
+//        }
+//    }
 }
 
 extension MainViewController: UITableViewDataSource {
@@ -102,13 +101,13 @@ extension MainViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        router?.presentRecordEditVC(with: taskArray[indexPath.row], isFieldEditing: true)
+        router?.presentRecordEditVC(with: taskArray[indexPath.row], delegate: self)
     }
 }
 // Extension for save/load/delete
 extension MainViewController: UITableViewDelegate {
     
-    private func saveRecord() {
+    private func saveContext() {
         
         do {
             try context.save()
@@ -118,7 +117,7 @@ extension MainViewController: UITableViewDelegate {
         baseView.mainTableViewProvidesToVC().reloadData()
     }
     
-    private func loadRecords(with request: NSFetchRequest<Record> = Record.fetchRequest()) {
+    private func loadContext(with request: NSFetchRequest<Record> = Record.fetchRequest()) {
         
         do {
             taskArray = try context.fetch(request)
@@ -142,5 +141,16 @@ extension MainViewController: UITableViewDelegate {
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
         return swipeActions
+    }
+}
+
+extension MainViewController: TransferDataToDetailVCProtocol {
+    var getArray: [Record] {
+        get {
+            taskArray
+        }
+        set {
+            taskArray
+        }
     }
 }
