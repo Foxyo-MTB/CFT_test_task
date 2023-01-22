@@ -12,10 +12,9 @@ class RecordEditViewController: UIViewController, Routable {
     
     @IBOutlet var recordTextView: UITextView!
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var router: MainRouter?
     var task: Record?
-    var selectedRecord: Record? = nil
     var delegate: TransferDataToDetailVCProtocol!
     
     override func viewDidLoad() {
@@ -23,7 +22,7 @@ class RecordEditViewController: UIViewController, Routable {
         rightSwipeFunctionality()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
                 if task != nil {
-                    recordTextView.text = task?.name
+                    recordTextView.attributedText = task?.name
                 } else {
                     navigationItem.title = "Напишите заметку"
                 }
@@ -31,6 +30,12 @@ class RecordEditViewController: UIViewController, Routable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        recordTextView.becomeFirstResponder()
+        recordTextView.allowsEditingTextAttributes = true
     }
 }
 
@@ -47,19 +52,25 @@ extension RecordEditViewController {
             router?.back()
         }
     }
-    
 }
 
 extension RecordEditViewController {
     
     @objc private func saveButtonPressed() {
         
+        let myString = recordTextView.text
+        let myAttribute = [ NSAttributedString.Key.foregroundColor: UIColor.blue,
+                            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 50),
+                            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 50, weight: )]
+        let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
+
+        // Add new record.
         if (task == nil)
         {
             print("add works")
             let newRecord = Record(context: self.context)
             newRecord.id = Int32(delegate.getArray.count)
-            newRecord.name = recordTextView.text
+            newRecord.name = myAttrString
             delegate.getArray.append(newRecord)
             saveDetailContext()
             do
@@ -74,11 +85,10 @@ extension RecordEditViewController {
             }
         }
         else {
-        //edit record
-            print("edit works")
+        // Edit record.
             for element in delegate.getArray {
                 if (element.id == task!.id) {
-                    element.name = recordTextView.text
+                    element.name = myAttrString
                     saveDetailContext()
                 }
             }

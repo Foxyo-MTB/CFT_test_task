@@ -3,6 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,20 +18,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="CIt-Xc-Z2D" userLabel="recordTextView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="567"/>
+                                <color key="backgroundColor" name="AccentColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ofk-BU-G8S">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                <color key="backgroundColor" systemColor="systemTealColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="PJ3-Y5-uov"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ofk-BU-G8S" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="BoL-gR-yQV"/>
                             <constraint firstItem="CIt-Xc-Z2D" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="EVX-p3-zgX"/>
+                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="top" secondItem="ofk-BU-G8S" secondAttribute="bottom" id="FdV-QX-bDx"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="CIt-Xc-Z2D" secondAttribute="trailing" id="Huj-VK-IAp"/>
-                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="IAN-lK-5PK"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ofk-BU-G8S" secondAttribute="trailing" id="MZD-bI-PGY"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="CIt-Xc-Z2D" secondAttribute="bottom" id="Ua6-FC-cJM"/>
+                            <constraint firstItem="ofk-BU-G8S" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="nMR-ed-sXl"/>
                         </constraints>
                     </view>
                     <connections>
@@ -43,11 +54,17 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

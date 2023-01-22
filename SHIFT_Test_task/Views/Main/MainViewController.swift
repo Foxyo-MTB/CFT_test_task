@@ -15,6 +15,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     private let baseView = MainView()
     var taskArray = [Record]()
     
+    private var indexPathSelectedButton: IndexPath?
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
@@ -43,44 +45,23 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
         if launchedBefore  {
             print("Not first launch.")
         } else {
-
+            
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! напишу позже тут как работает приложение!"
+            hardCodedRecord.name = NSAttributedString(string: "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!")
             hardCodedRecord.id = 0
             taskArray.append(hardCodedRecord)
             saveContext()
             taskArray.append(hardCodedRecord)
             saveContext()
-        
+            
             print("First launch, setting UserDefault.")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
         }
     }
     
     @objc func addTapped() {
-        //print(taskArray.count)
         router?.presentRecordEditVCForNewRecord(delegate: self)
     }
-    
-//    func saveRecordAfterCreation(with record: String, id: Int32) {
-//
-//        if let index = taskArray.firstIndex(where: { $0.id == id}) {
-//            taskArray[index].name = record
-//            saveContext()
-//            print("record edited")
-//        } else {
-//            if record != "" {
-//                print("new record added")
-//                let newRecord = Record(context: self.context)
-//                newRecord.name = record
-//                newRecord.id = id
-//                self.taskArray.append(newRecord)
-//                self.saveContext()
-//            } else {
-//                print("You didn't typed text.")
-//            }
-//        }
-//    }
 }
 
 extension MainViewController: UITableViewDataSource {
@@ -91,14 +72,26 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = baseView.mainTableViewProvidesToVC().dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
+        
         let record = taskArray[indexPath.row]
-        cell.mainTableViewLabelProvidesToVC().text = record.name
+        
+        let cell = baseView.mainTableViewProvidesToVC().dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
+        cell.mainTableViewLabelProvidesToVC().attributedText = record.name
+        if record.imagePhoto == nil {
+            cell.mainImageViewProvidesToVC().image = UIImage(named: "defaultPhoto")
+        } else {
+            cell.mainImageViewProvidesToVC().image = UIImage(data: record.imagePhoto!)
+        }
+      //  cell.mainButtonProvidesToVC().addTarget(self, action: #selector(pickPhotoFromLibrary), for: .touchUpInside)
+        cell.action = { [weak self] indexPath in
+            self?.indexPathSelectedButton = indexPath
+            self?.pickPhotoFromLibrary()
+        }
+        cell.indexPath = indexPath
         cell.selectionStyle = .none
         cell.separatorInset = UIEdgeInsets()
         return cell
     }
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         router?.presentRecordEditVC(with: taskArray[indexPath.row], delegate: self)
@@ -150,7 +143,31 @@ extension MainViewController: TransferDataToDetailVCProtocol {
             taskArray
         }
         set {
+            //print("Appended to task array")
             taskArray
         }
+    }
+}
+
+extension MainViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+    
+    func pickPhotoFromLibrary() {
+        print(indexPathSelectedButton?.row)
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        dismiss(animated:true, completion: nil)
+        taskArray[indexPathSelectedButton!.row].imagePhoto = image.pngData()
+        saveContext()
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }
