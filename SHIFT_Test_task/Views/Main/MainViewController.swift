@@ -36,7 +36,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadContext()
-        //firstHardcodedRecordAdds()
     }
     
     private func firstHardcodedRecordAdds() {
@@ -45,7 +44,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
         if launchedBefore  {
             print("Not first launch.")
         } else {
-            
             let hardCodedRecord = Record(context: self.context)
             hardCodedRecord.name = NSAttributedString(string: "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!")
             hardCodedRecord.id = 0
@@ -76,6 +74,7 @@ extension MainViewController: UITableViewDataSource {
         let record = taskArray[indexPath.row]
         
         let cell = baseView.mainTableViewProvidesToVC().dequeueReusableCell(withIdentifier: CustomTableViewCell.identifier, for: indexPath) as! CustomTableViewCell
+        let attrText = record.name
         cell.mainTableViewLabelProvidesToVC().attributedText = record.name
         if record.imagePhoto == nil {
             cell.mainImageViewProvidesToVC().image = UIImage(named: "defaultPhoto")
