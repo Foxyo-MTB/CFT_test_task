@@ -45,13 +45,13 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
             print("Not first launch.")
         } else {
             let hardCodedRecord = Record(context: self.context)
-            hardCodedRecord.name = NSAttributedString(string: "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!")
+            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!"
+            let hardCodedAttributes = [ NSAttributedString.Key.font: UIFont(name: "Arial", size: 20)]
+            hardCodedRecord.name = NSAttributedString(string: hadrcodedString, attributes: hardCodedAttributes)
             hardCodedRecord.id = 0
+            hardCodedRecord.font = "Arial"
             taskArray.append(hardCodedRecord)
             saveContext()
-            taskArray.append(hardCodedRecord)
-            saveContext()
-            
             print("First launch, setting UserDefault.")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
         }

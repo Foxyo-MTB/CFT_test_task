@@ -34,9 +34,8 @@ class RecordEditViewController: UIViewController, Routable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        var myAttribute = task?.fontAttribute
         print("***")
-        print(myAttribute)
+        print(task?.font)
         print("***")
     }
     
@@ -68,8 +67,9 @@ extension RecordEditViewController: UIFontPickerViewControllerDelegate {
     
     func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {
         guard let descriptor = viewController.selectedFontDescriptor else { return }
-        recordTextView.font = UIFont(descriptor: descriptor, size: 14)
-        fontSelected = UIFont(descriptor: descriptor, size: 14)
+        recordTextView.font = UIFont(descriptor: descriptor, size: 20)
+        fontSelected = UIFont(descriptor: descriptor, size: 20)
+        print(fontSelected?.fontName)
         viewController.dismiss(animated: true)
     }
 
@@ -97,39 +97,31 @@ extension RecordEditViewController {
         
     @objc private func saveButtonPressed() {
         
-        let myString = recordTextView.text
-        let myAttribute = [ NSAttributedString.Key.font: fontSelected ?? UIFont(name: "Arial", size: 20)]
-        let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
         
         // Add new record.
         if (task == nil)
         {
+            let myString = recordTextView.text
+            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: fontSelected?.fontName ?? "Arial", size: 20)]
+            let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
             print("add works")
             let newRecord = Record(context: self.context)
             newRecord.id = Int32(delegate.getArray.count)
             newRecord.name = myAttrString
-
+            newRecord.font = fontSelected?.fontName ?? "Arial"
             delegate.getArray.append(newRecord)
             saveDetailContext()
-            do
-            {
-                try context.save()
-                delegate.getArray.append(newRecord)
-                router?.back()
-            }
-            catch
-            {
-                print("context save error")
-            }
+            router?.back()
         }
         else {
         // Edit record.
             let myString = recordTextView.text
-            let myAttribute = [ NSAttributedString.Key.font: fontSelected ?? UIFont(name: "Arial", size: 20)]
+            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: (fontSelected?.fontName ?? task!.font)!, size: 20)]
             let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
             for element in delegate.getArray {
                 if (element.id == task!.id) {
                     element.name = myAttrString
+                    element.font = fontSelected?.fontName ?? task!.font
                     saveDetailContext()
                 }
             }
