@@ -25,6 +25,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
         firstHardcodedRecordAdds()
+        overrideUserInterfaceStyle = .light
     }
     
     override func viewWillLayoutSubviews() {
@@ -50,6 +51,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
             hardCodedRecord.name = NSAttributedString(string: hadrcodedString, attributes: hardCodedAttributes)
             hardCodedRecord.id = 0
             hardCodedRecord.font = "Arial"
+            hardCodedRecord.fontSize = 20
             taskArray.append(hardCodedRecord)
             saveContext()
             print("First launch, setting UserDefault.")
@@ -160,7 +162,7 @@ extension MainViewController: UIImagePickerControllerDelegate & UINavigationCont
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        let image = info[UIImagePickerController.InfoKey.editedImage] as! UIImage
         dismiss(animated:true, completion: nil)
         taskArray[indexPathSelectedButton!.row].imagePhoto = image.pngData()
         saveContext()

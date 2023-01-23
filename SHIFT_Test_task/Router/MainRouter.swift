@@ -19,6 +19,7 @@ class MainRouter: NSObject {
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        navigationController.overrideUserInterfaceStyle = .light
     }
     
     func pushMainVC() {

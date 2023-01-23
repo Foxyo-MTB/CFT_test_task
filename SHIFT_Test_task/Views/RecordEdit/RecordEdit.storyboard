@@ -26,7 +26,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ofk-BU-G8S">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                                 <subviews>
-                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="2cZ-ga-tFW">
+                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" continuous="NO" autorepeat="NO" value="20" minimumValue="10" maximumValue="30" translatesAutoresizingMaskIntoConstraints="NO" id="2cZ-ga-tFW">
                                         <rect key="frame" x="20" y="34" width="94" height="32"/>
                                         <connections>
                                             <action selector="stepperPressed:" destination="Y6W-OH-hqX" eventType="valueChanged" id="nnE-mA-rqD"/>
@@ -57,16 +57,18 @@
                         <constraints>
                             <constraint firstItem="ofk-BU-G8S" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="BoL-gR-yQV"/>
                             <constraint firstItem="CIt-Xc-Z2D" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="EVX-p3-zgX"/>
-                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="top" secondItem="ofk-BU-G8S" secondAttribute="bottom" id="FdV-QX-bDx"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="CIt-Xc-Z2D" secondAttribute="trailing" id="Huj-VK-IAp"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ofk-BU-G8S" secondAttribute="trailing" id="MZD-bI-PGY"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="CIt-Xc-Z2D" secondAttribute="bottom" id="Ua6-FC-cJM"/>
+                            <constraint firstItem="CIt-Xc-Z2D" firstAttribute="top" secondItem="ofk-BU-G8S" secondAttribute="bottom" id="cdn-4W-BTz"/>
                             <constraint firstItem="ofk-BU-G8S" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="nMR-ed-sXl"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="fontChangeOutlet" destination="khP-ae-YsW" id="UGf-hr-hGn"/>
                         <outlet property="recordTextView" destination="CIt-Xc-Z2D" id="hcV-Zb-WN0"/>
+                        <outlet property="recordTextViewBottomCOnstraint" destination="Ua6-FC-cJM" id="rAf-Nh-sAq"/>
+                        <outlet property="stepperOutlet" destination="2cZ-ga-tFW" id="yFb-t7-WzV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
