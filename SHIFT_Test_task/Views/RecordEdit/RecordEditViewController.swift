@@ -48,11 +48,8 @@ class RecordEditViewController: UIViewController, Routable {
     }
             
     @IBAction func stepperPressed(_ sender: UIStepper) {
-        
-        recordTextView.isEditable = true
-        recordTextView.font = UIFont(name: task?.font ?? "Arial", size: CGFloat(sender.value))
-        fontSizeSelected = sender.value
-        recordTextView.isEditable = false
+            recordTextView.font = UIFont(name: task?.font ?? "Arial", size: CGFloat(sender.value))
+            fontSizeSelected = sender.value
     }
     
     @IBAction func fontChangeButtonPressed(_ sender: UIButton) {
