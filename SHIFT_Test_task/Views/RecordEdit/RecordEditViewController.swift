@@ -28,7 +28,7 @@ class RecordEditViewController: UIViewController, Routable {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+        setupKeyboardDismissRecognizer()
         
         
         overrideUserInterfaceStyle = .light
@@ -178,4 +178,18 @@ extension RecordEditViewController {
           }
 
      }
+    
+    func setupKeyboardDismissRecognizer(){
+            let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: #selector(RecordEditViewController.dismissKeyboard))
+            
+            self.view.addGestureRecognizer(tapRecognizer)
+    }
+        
+    @objc func dismissKeyboard()
+    {
+       view.endEditing(true)
+    }
+    
 }
