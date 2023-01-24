@@ -13,10 +13,7 @@ class RecordEditViewController: UIViewController, Routable {
     @IBOutlet var recordTextView: UITextView!
     @IBOutlet var fontChangeOutlet: UIButton!
     @IBOutlet var stepperOutlet: UIStepper!
-    
     @IBOutlet var recordTextViewBottomCOnstraint: NSLayoutConstraint!
-    
-   
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var router: MainRouter?
@@ -27,31 +24,10 @@ class RecordEditViewController: UIViewController, Routable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        recordTextView.allowsEditingTextAttributes = true
+        setView()
+        setObservers()
         setupKeyboardDismissRecognizer()
-        overrideUserInterfaceStyle = .light
-        stepperOutlet.minimumValue = 10
-        stepperOutlet.maximumValue = 30
-        stepperOutlet.layer.cornerRadius = 10
-        stepperOutlet.overrideUserInterfaceStyle = .dark
         rightSwipeFunctionality()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: self, action: #selector(backButtonPressed))
-
-        if task != nil {
-            recordTextView.attributedText = task?.name
-            stepperOutlet.value = task!.fontSize
-            fontSelected = UIFont(name: (task?.font)!, size: task!.fontSize)
-        } else {
-            let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor(red: 56/255, green: 56/255, blue: 56/255, alpha: 1)]
-            navigationController?.navigationBar.titleTextAttributes = textAttributes
-            stepperOutlet.value = 20
-            navigationItem.title = "Напишите заметку"
-        }
-        fontChangeOutlet.setTitle("Изменить шрифт", for: .normal)
-        fontChangeOutlet.layer.cornerRadius = 10
     }
     
     @IBAction func stepperPressed(_ sender: UIStepper) {
@@ -59,14 +35,10 @@ class RecordEditViewController: UIViewController, Routable {
         if (fontSelected?.fontName != nil) {
             recordTextView.font = UIFont(name: fontSelected!.fontName, size: CGFloat(sender.value))
             fontSizeSelected = sender.value
-            print("Custom font selected")
         } else {
-            recordTextView.font = UIFont(name: "Arial", size: CGFloat(sender.value))
+            recordTextView.font = UIFont(name: Fonts.arialFont, size: CGFloat(sender.value))
             fontSizeSelected = sender.value
-            print("Arial font selected")
         }
-        
-        
     }
     
     @IBAction func fontChangeButtonPressed(_ sender: UIButton) {
@@ -77,7 +49,37 @@ class RecordEditViewController: UIViewController, Routable {
         vc.delegate = self
         present(vc, animated: true)
     }
+    
+    private func setObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func setView() {
+        overrideUserInterfaceStyle = .light
+        recordTextView.allowsEditingTextAttributes = true
+        stepperOutlet.minimumValue = 10
+        stepperOutlet.maximumValue = 30
+        stepperOutlet.layer.cornerRadius = 10
+        stepperOutlet.overrideUserInterfaceStyle = .dark
+        fontChangeOutlet.setTitle("Изменить шрифт", for: .normal)
+        fontChangeOutlet.layer.cornerRadius = 10
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: self, action: #selector(backButtonPressed))
+        if task != nil {
+            recordTextView.attributedText = task?.name
+            stepperOutlet.value = task!.fontSize
+            fontSelected = UIFont(name: (task?.font)!, size: task!.fontSize)
+        } else {
+            let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor(red: 56/255, green: 56/255, blue: 56/255, alpha: 1)]
+            navigationController?.navigationBar.titleTextAttributes = textAttributes
+            stepperOutlet.value = 20
+            navigationItem.title = "Напишите заметку"
+        }
+    }
 }
+
+//MARK: - Extension for delegate methods.
 
 extension RecordEditViewController: UIFontPickerViewControllerDelegate {
     
@@ -105,6 +107,8 @@ extension RecordEditViewController: UIFontPickerViewControllerDelegate {
     }
 }
 
+//MARK: - Actions in navigation bar.
+
 extension RecordEditViewController {
     
     @objc private func backButtonPressed() {
@@ -116,7 +120,6 @@ extension RecordEditViewController {
         // Add new record.
         if (task == nil)
         {
-            print("add works")
             let newRecord = Record(context: self.context)
             newRecord.id = Int32(delegate.getArray.count)
             newRecord.name = recordTextView.attributedText
@@ -130,9 +133,6 @@ extension RecordEditViewController {
         else {
             // Edit record.
             let myString = recordTextView.text
-//            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: (fontSelected?.fontName ?? task!.font)!, size: fontSizeSelected ?? task!.fontSize)]
-//            let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
-            print("edit works")
             for element in delegate.getArray {
                 if (element.id == task!.id) {
                     element.name = recordTextView.attributedText
@@ -145,7 +145,9 @@ extension RecordEditViewController {
         }
     }
 }
-// Extension for save data to Core data
+
+//MARK: - Core data saving.
+
 extension RecordEditViewController {
     
     private func saveDetailContext() {
@@ -156,49 +158,42 @@ extension RecordEditViewController {
         }
     }
 }
+
 //MARK: - extension for editing textView constraint
+
 extension RecordEditViewController {
     
     @objc func keyboardWillShow(notification: Notification) {
         
         let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-        
         let keyboardHeight = keyboardSize?.height
-        
         if #available(iOS 11.0, *){
-            
             self.recordTextViewBottomCOnstraint.constant = keyboardHeight! - view.safeAreaInsets.bottom
         }
         else {
             self.recordTextViewBottomCOnstraint.constant = view.safeAreaInsets.bottom
         }
-        
         UIView.animate(withDuration: 0.5){
-            
             self.view.layoutIfNeeded()
-            
         }
-        
-        
     }
     
     @objc func keyboardWillHide(notification: Notification){
-        
         self.recordTextViewBottomCOnstraint.constant =  0 // or change according to your logic
-        
         UIView.animate(withDuration: 0.5){
-            
             self.view.layoutIfNeeded()
-            
         }
-        
     }
+}
+
+//MARK: - Extension for keyboard interaction.
+
+extension RecordEditViewController {
     
-    func setupKeyboardDismissRecognizer(){
+    private func setupKeyboardDismissRecognizer(){
         let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(RecordEditViewController.dismissKeyboard))
-        
         self.view.addGestureRecognizer(tapRecognizer)
     }
     
@@ -206,5 +201,4 @@ extension RecordEditViewController {
     {
         view.endEditing(true)
     }
-    
 }

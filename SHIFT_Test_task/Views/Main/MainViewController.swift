@@ -8,21 +8,26 @@
 import UIKit
 import CoreData
 
-class MainViewController: UIViewController, UITextFieldDelegate, Routable {
+class MainViewController: UIViewController, UITextFieldDelegate, TransferDataToDetailVCProtocol, Routable {
     
-    
-    var router: MainRouter?
-    private let baseView = MainView()
-    var taskArray = [Record]()
     
     private var indexPathSelectedButton: IndexPath?
-    
+    private let baseView = MainView()
+    var router: MainRouter?
+    var taskArray = [Record]()
+    var getArray: [Record] {
+        get {
+            taskArray
+        }
+        set {
+            
+        }
+    }
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Добавьте заметку", style: .plain, target: self, action: #selector(addTapped))
-        //navigationItem.rightBarButtonItem?.tintColor = UIColor(red: 56/255, green: 56/255, blue: 56/266, alpha: 1)
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
         firstHardcodedRecordAdds()
@@ -47,16 +52,14 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
             print("Not first launch.")
         } else {
             let hardCodedRecord = Record(context: self.context)
-//            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!"
-            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Ты можешь меня удалить, но сперва прочитай! В данном приложении можно создать заметки, добавить к ним картинки, для этого надо нажать на иконку изображения, заметку можно удалить. Внутри заметки можно редактировать шрифт, размер шрифта, а так же можно изменить шрифт на жирный/курсив/подчеркнутый. Заметки сохраняются по нажатию кнопки сохранить. Если не хотите сохранять изменения, то можно нажать кнопку назад или свайпнуть вправо. Наслаждайтесь!"
+            let hadrcodedString = Descriptions.hardcodedText
             let hardCodedAttributes = [ NSAttributedString.Key.font: UIFont(name: "Arial", size: 20)]
             hardCodedRecord.name = NSAttributedString(string: hadrcodedString, attributes: hardCodedAttributes)
             hardCodedRecord.id = 0
-            hardCodedRecord.font = "Arial"
+            hardCodedRecord.font = Fonts.arialFont
             hardCodedRecord.fontSize = 20
             taskArray.append(hardCodedRecord)
             saveContext()
-            print("First launch, setting UserDefault.")
             UserDefaults.standard.set(true, forKey: "launchedBefore")
         }
     }
@@ -65,6 +68,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
         router?.presentRecordEditVCForNewRecord(delegate: self)
     }
 }
+
+//MARK: - Extension for Data source methods.
 
 extension MainViewController: UITableViewDataSource {
     
@@ -81,7 +86,7 @@ extension MainViewController: UITableViewDataSource {
         let attrText = record.name
         cell.mainTableViewLabelProvidesToVC().attributedText = record.name
         if record.imagePhoto == nil {
-            cell.mainImageViewProvidesToVC().image = UIImage(named: "defaultPhoto")
+            cell.mainImageViewProvidesToVC().image = UIImage(named: Pictures.defaultPhoto)
         } else {
             cell.mainImageViewProvidesToVC().image = UIImage(data: record.imagePhoto!)
         }
@@ -99,8 +104,31 @@ extension MainViewController: UITableViewDataSource {
         router?.presentRecordEditVC(with: taskArray[indexPath.row], delegate: self)
     }
 }
-// Extension for save/load/delete
+
+//MARK: - Extinsion for TableView Delegate methods / actions with
+
 extension MainViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") {  (contextualAction, view, boolValue) in
+            self.context.delete(self.taskArray[indexPath.row])
+            self.taskArray.remove(at: indexPath.row)
+            do {
+                try self.context.save()
+                self.baseView.mainTableViewProvidesToVC().reloadData()
+            } catch {
+                print(error)
+            }
+        }
+        let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
+        return swipeActions
+    }
+}
+
+//MARK: - Core data save / load.
+
+extension MainViewController {
     
     private func saveContext() {
         
@@ -121,35 +149,9 @@ extension MainViewController: UITableViewDelegate {
         }
         baseView.mainTableViewProvidesToVC().reloadData()
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") {  (contextualAction, view, boolValue) in
-            self.context.delete(self.taskArray[indexPath.row])
-            self.taskArray.remove(at: indexPath.row)
-            do {
-                try self.context.save()
-                self.baseView.mainTableViewProvidesToVC().reloadData()
-            } catch {
-                print(error)
-            }
-        }
-        let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
-        return swipeActions
-    }
 }
 
-extension MainViewController: TransferDataToDetailVCProtocol {
-    var getArray: [Record] {
-        get {
-            taskArray
-        }
-        set {
-            //print("Appended to task array")
-            //taskArray
-        }
-    }
-}
+//MARK: - Extension for adding picture to record.
 
 extension MainViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
@@ -162,7 +164,7 @@ extension MainViewController: UIImagePickerControllerDelegate & UINavigationCont
         vc.allowsEditing = true
         present(vc, animated: true)
     }
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.editedImage] as! UIImage
         dismiss(animated:true, completion: nil)

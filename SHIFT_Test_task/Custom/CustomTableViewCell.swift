@@ -40,6 +40,34 @@ class CustomTableViewCell: UITableViewCell {
         super.layoutSubviews()
     }
     
+    func mainTableViewLabelProvidesToVC() -> UILabel {
+        mainTableViewLabel
+    }
+    
+    func mainImageViewProvidesToVC() -> UIImageView {
+        mainImageView
+    }
+    
+    func mainButtonProvidesToVC() -> UIButton {
+        mainButton
+    }
+    
+    @objc private func selectButton() {
+        action!(indexPath)
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        configure()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension CustomTableViewCell {
+    
     private func configure() {
         
         mainButton.addTarget(self, action: #selector(selectButton), for: .touchUpInside)
@@ -69,28 +97,4 @@ class CustomTableViewCell: UITableViewCell {
 
     }
     
-    func mainTableViewLabelProvidesToVC() -> UILabel {
-        mainTableViewLabel
-    }
-    
-    func mainImageViewProvidesToVC() -> UIImageView {
-        mainImageView
-    }
-    
-    func mainButtonProvidesToVC() -> UIButton {
-        mainButton
-    }
-    
-    @objc private func selectButton() {
-        action!(indexPath)
-    }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configure()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }

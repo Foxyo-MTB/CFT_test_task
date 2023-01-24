@@ -38,7 +38,6 @@ class MainView: UIView {
 extension MainView {
     
     private func setupView() {
-        
         self.addSubview(mainTableView)
         mainTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()

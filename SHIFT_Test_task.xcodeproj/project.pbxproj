@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		743A111729805EF50074D345 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743A111629805EF50074D345 /* Constants.swift */; };
 		744A410A297ADFC3008BE2AB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 744A4109297ADFC3008BE2AB /* SnapKit */; };
 		744A410D297B04EA008BE2AB /* RecordEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744A410C297B04EA008BE2AB /* RecordEditViewController.swift */; };
 		744A410F297B058F008BE2AB /* RecordEdit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 744A410E297B058F008BE2AB /* RecordEdit.storyboard */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		743A111629805EF50074D345 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		744A410C297B04EA008BE2AB /* RecordEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordEditViewController.swift; sourceTree = "<group>"; };
 		744A410E297B058F008BE2AB /* RecordEdit.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RecordEdit.storyboard; sourceTree = "<group>"; };
 		7472F65D297C11A90083347C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 		743A111429805ECE0074D345 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
+				743A111629805EF50074D345 /* Constants.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74793A62297AD8AC00FF19B6 /* MainViewController.swift in Sources */,
+				743A111729805EF50074D345 /* Constants.swift in Sources */,
 				744A410D297B04EA008BE2AB /* RecordEditViewController.swift in Sources */,
 				74C056DB297D4BAD00418E49 /* TransferDataToDetailVCProtocol.swift in Sources */,
 				7472F65E297C11A90083347C /* CustomTableViewCell.swift in Sources */,
