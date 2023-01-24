@@ -22,6 +22,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Добавьте заметку", style: .plain, target: self, action: #selector(addTapped))
+        //navigationItem.rightBarButtonItem?.tintColor = UIColor(red: 56/255, green: 56/255, blue: 56/266, alpha: 1)
         baseView.mainTableViewProvidesToVC().dataSource = self
         baseView.mainTableViewProvidesToVC().delegate = self
         firstHardcodedRecordAdds()
@@ -156,6 +157,7 @@ extension MainViewController: UIImagePickerControllerDelegate & UINavigationCont
         let vc = UIImagePickerController()
         vc.sourceType = .photoLibrary
         vc.delegate = self
+        vc.overrideUserInterfaceStyle = .light
         vc.allowsEditing = true
         present(vc, animated: true)
     }

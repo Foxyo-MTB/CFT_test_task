@@ -20,6 +20,7 @@ class MainRouter: NSObject {
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         navigationController.overrideUserInterfaceStyle = .light
+        navigationController.navigationBar.tintColor = UIColor(red: 56/255, green: 56/255, blue: 56/266, alpha: 1)
     }
     
     func pushMainVC() {

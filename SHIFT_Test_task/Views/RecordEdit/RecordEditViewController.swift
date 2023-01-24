@@ -33,15 +33,21 @@ class RecordEditViewController: UIViewController, Routable {
         overrideUserInterfaceStyle = .light
         stepperOutlet.minimumValue = 10
         stepperOutlet.maximumValue = 30
+        stepperOutlet.layer.cornerRadius = 10
+        stepperOutlet.overrideUserInterfaceStyle = .dark
         rightSwipeFunctionality()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
+        //navigationItem.rightBarButtonItem?.tintColor = UIColor(red: 56/255, green: 56/255, blue: 56/266, alpha: 1)
         if task != nil {
             recordTextView.attributedText = task?.name
             stepperOutlet.value = task!.fontSize
             fontSelected = UIFont(name: (task?.font)!, size: task!.fontSize)
         } else {
+            let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor(red: 56/255, green: 56/255, blue: 56/255, alpha: 1)]
+            navigationController?.navigationBar.titleTextAttributes = textAttributes
             stepperOutlet.value = 20
             navigationItem.title = "Напишите заметку"
+            
         }
         fontChangeOutlet.setTitle("Изменить шрифт", for: .normal)
         fontChangeOutlet.layer.cornerRadius = 10
