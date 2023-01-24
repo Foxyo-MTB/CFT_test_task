@@ -47,7 +47,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, Routable {
             print("Not first launch.")
         } else {
             let hardCodedRecord = Record(context: self.context)
-            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!"
+//            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Напишу позже тут как работает приложение!"
+            let hadrcodedString = "Первая заметка, которая по заданию уже должна быть отображена при первом запуске! Ты можешь меня удалить, но сперва прочитай! В данном приложении можно создать заметки, добавить к ним картинки, для этого надо нажать на иконку изображения, заметку можно удалить. Внутри заметки можно редактировать шрифт, размер шрифта, а так же можно изменить шрифт на жирный/курсив/подчеркнутый. Заметки сохраняются по нажатию кнопки сохранить. Если не хотите сохранять изменения, то можно нажать кнопку назад или свайпнуть вправо. Наслаждайтесь!"
             let hardCodedAttributes = [ NSAttributedString.Key.font: UIFont(name: "Arial", size: 20)]
             hardCodedRecord.name = NSAttributedString(string: hadrcodedString, attributes: hardCodedAttributes)
             hardCodedRecord.id = 0

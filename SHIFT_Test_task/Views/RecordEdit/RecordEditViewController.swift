@@ -16,6 +16,7 @@ class RecordEditViewController: UIViewController, Routable {
     
     @IBOutlet var recordTextViewBottomCOnstraint: NSLayoutConstraint!
     
+   
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var router: MainRouter?
@@ -37,7 +38,8 @@ class RecordEditViewController: UIViewController, Routable {
         stepperOutlet.overrideUserInterfaceStyle = .dark
         rightSwipeFunctionality()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
-        //navigationItem.rightBarButtonItem?.tintColor = UIColor(red: 56/255, green: 56/255, blue: 56/266, alpha: 1)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Назад", style: .plain, target: self, action: #selector(backButtonPressed))
+
         if task != nil {
             recordTextView.attributedText = task?.name
             stepperOutlet.value = task!.fontSize
@@ -47,7 +49,6 @@ class RecordEditViewController: UIViewController, Routable {
             navigationController?.navigationBar.titleTextAttributes = textAttributes
             stepperOutlet.value = 20
             navigationItem.title = "Напишите заметку"
-            
         }
         fontChangeOutlet.setTitle("Изменить шрифт", for: .normal)
         fontChangeOutlet.layer.cornerRadius = 10
@@ -106,14 +107,15 @@ extension RecordEditViewController: UIFontPickerViewControllerDelegate {
 
 extension RecordEditViewController {
     
+    @objc private func backButtonPressed() {
+        router?.back()
+    }
+    
     @objc private func saveButtonPressed() {
         
         // Add new record.
         if (task == nil)
         {
-//            let myString = recordTextView.attributedText!
-//            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: fontSelected?.fontName ?? "Arial", size: fontSizeSelected ?? 20)]
-//            let myAttrString = NSAttributedString(string: myString, attributes: myAttribute)
             print("add works")
             let newRecord = Record(context: self.context)
             newRecord.id = Int32(delegate.getArray.count)
