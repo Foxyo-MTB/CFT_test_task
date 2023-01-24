@@ -83,7 +83,6 @@ extension MainViewController: UITableViewDataSource {
         } else {
             cell.mainImageViewProvidesToVC().image = UIImage(data: record.imagePhoto!)
         }
-      //  cell.mainButtonProvidesToVC().addTarget(self, action: #selector(pickPhotoFromLibrary), for: .touchUpInside)
         cell.action = { [weak self] indexPath in
             self?.indexPathSelectedButton = indexPath
             self?.pickPhotoFromLibrary()
@@ -145,7 +144,7 @@ extension MainViewController: TransferDataToDetailVCProtocol {
         }
         set {
             //print("Appended to task array")
-            taskArray
+            //taskArray
         }
     }
 }

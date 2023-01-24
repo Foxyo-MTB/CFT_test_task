@@ -28,28 +28,38 @@ class RecordEditViewController: UIViewController, Routable {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        recordTextView.allowsEditingTextAttributes = true
         setupKeyboardDismissRecognizer()
-        
-        
         overrideUserInterfaceStyle = .light
         stepperOutlet.minimumValue = 10
         stepperOutlet.maximumValue = 30
         rightSwipeFunctionality()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveButtonPressed))
-                if task != nil {
-                    recordTextView.attributedText = task?.name
-                    stepperOutlet.value = task!.fontSize
-                } else {
-                    stepperOutlet.value = 20
-                    navigationItem.title = "Напишите заметку"
-                }
+        if task != nil {
+            recordTextView.attributedText = task?.name
+            stepperOutlet.value = task!.fontSize
+            fontSelected = UIFont(name: (task?.font)!, size: task!.fontSize)
+        } else {
+            stepperOutlet.value = 20
+            navigationItem.title = "Напишите заметку"
+        }
         fontChangeOutlet.setTitle("Изменить шрифт", for: .normal)
         fontChangeOutlet.layer.cornerRadius = 10
     }
-            
+    
     @IBAction func stepperPressed(_ sender: UIStepper) {
-            recordTextView.font = UIFont(name: task?.font ?? "Arial", size: CGFloat(sender.value))
+        
+        if (fontSelected?.fontName != nil) {
+            recordTextView.font = UIFont(name: fontSelected!.fontName, size: CGFloat(sender.value))
             fontSizeSelected = sender.value
+            print("Custom font selected")
+        } else {
+            recordTextView.font = UIFont(name: "Arial", size: CGFloat(sender.value))
+            fontSizeSelected = sender.value
+            print("Arial font selected")
+        }
+        
+        
     }
     
     @IBAction func fontChangeButtonPressed(_ sender: UIButton) {
@@ -70,7 +80,7 @@ extension RecordEditViewController: UIFontPickerViewControllerDelegate {
         fontSelected = UIFont(descriptor: descriptor, size: fontSizeSelected ?? 20)
         viewController.dismiss(animated: true)
     }
-
+    
     private func rightSwipeFunctionality() {
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
         rightSwipe.direction = .right
@@ -89,34 +99,35 @@ extension RecordEditViewController: UIFontPickerViewControllerDelegate {
 }
 
 extension RecordEditViewController {
-        
+    
     @objc private func saveButtonPressed() {
         
         // Add new record.
         if (task == nil)
         {
-            let myString = recordTextView.text
-            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: fontSelected?.fontName ?? "Arial", size: fontSizeSelected ?? 20)]
-            let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
+//            let myString = recordTextView.attributedText!
+//            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: fontSelected?.fontName ?? "Arial", size: fontSizeSelected ?? 20)]
+//            let myAttrString = NSAttributedString(string: myString, attributes: myAttribute)
             print("add works")
             let newRecord = Record(context: self.context)
             newRecord.id = Int32(delegate.getArray.count)
-            newRecord.name = myAttrString
+            newRecord.name = recordTextView.attributedText
             newRecord.font = fontSelected?.fontName ?? "Arial"
             newRecord.fontSize = fontSizeSelected ?? 20
             delegate.getArray.append(newRecord)
+            print(delegate.getArray.count)
             saveDetailContext()
-            print(stepperOutlet.value)
             router?.back()
         }
         else {
-        // Edit record.
+            // Edit record.
             let myString = recordTextView.text
-            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: (fontSelected?.fontName ?? task!.font)!, size: fontSizeSelected ?? task!.fontSize)]
-            let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
+//            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: (fontSelected?.fontName ?? task!.font)!, size: fontSizeSelected ?? task!.fontSize)]
+//            let myAttrString = NSAttributedString(string: myString!, attributes: myAttribute)
+            print("edit works")
             for element in delegate.getArray {
                 if (element.id == task!.id) {
-                    element.name = myAttrString
+                    element.name = recordTextView.attributedText
                     element.font = fontSelected?.fontName ?? task!.font
                     element.fontSize = fontSizeSelected ?? task!.fontSize
                     saveDetailContext()
@@ -128,9 +139,8 @@ extension RecordEditViewController {
 }
 // Extension for save data to Core data
 extension RecordEditViewController {
- 
+    
     private func saveDetailContext() {
-        
         do {
             try context.save()
         } catch {
@@ -142,51 +152,51 @@ extension RecordEditViewController {
 extension RecordEditViewController {
     
     @objc func keyboardWillShow(notification: Notification) {
-
+        
         let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-
+        
         let keyboardHeight = keyboardSize?.height
-
+        
         if #available(iOS 11.0, *){
-
-             self.recordTextViewBottomCOnstraint.constant = keyboardHeight! - view.safeAreaInsets.bottom
-         }
-         else {
-              self.recordTextViewBottomCOnstraint.constant = view.safeAreaInsets.bottom
-            }
-
-          UIView.animate(withDuration: 0.5){
-
-             self.view.layoutIfNeeded()
-
-          }
-
-
-      }
-
-     @objc func keyboardWillHide(notification: Notification){
-
-         self.recordTextViewBottomCOnstraint.constant =  0 // or change according to your logic
-
-          UIView.animate(withDuration: 0.5){
-
-             self.view.layoutIfNeeded()
-
-          }
-
-     }
+            
+            self.recordTextViewBottomCOnstraint.constant = keyboardHeight! - view.safeAreaInsets.bottom
+        }
+        else {
+            self.recordTextViewBottomCOnstraint.constant = view.safeAreaInsets.bottom
+        }
+        
+        UIView.animate(withDuration: 0.5){
+            
+            self.view.layoutIfNeeded()
+            
+        }
+        
+        
+    }
+    
+    @objc func keyboardWillHide(notification: Notification){
+        
+        self.recordTextViewBottomCOnstraint.constant =  0 // or change according to your logic
+        
+        UIView.animate(withDuration: 0.5){
+            
+            self.view.layoutIfNeeded()
+            
+        }
+        
+    }
     
     func setupKeyboardDismissRecognizer(){
-            let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
-                target: self,
-                action: #selector(RecordEditViewController.dismissKeyboard))
-            
-            self.view.addGestureRecognizer(tapRecognizer)
-    }
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(RecordEditViewController.dismissKeyboard))
         
+        self.view.addGestureRecognizer(tapRecognizer)
+    }
+    
     @objc func dismissKeyboard()
     {
-       view.endEditing(true)
+        view.endEditing(true)
     }
     
 }
